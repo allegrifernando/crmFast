@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build",
+    "build": "pnpm install && cd apps/api && npx prisma generate && cd ../.. && turbo build",
+    "start": "cd apps/api && npx prisma migrate deploy && node dist/src/main",
     "test": "turbo test",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
