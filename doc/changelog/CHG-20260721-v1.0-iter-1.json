@@ -1,0 +1,17 @@
+{
+  "id": "CHG-20260721-v1.0-iter-1",
+  "date": "2026-07-21T12:20:54.369320",
+  "project": "C:\\Users\\fallegri\\OneDrive\\SDD\\OpenCode\\crmFast",
+  "component": "crmFast",
+  "iteration": "v1.0-iter-1",
+  "change_type": "scaffolding",
+  "approved_by": "dev-assistant",
+  "comment": "Slice 1 (Scaffolding) completado. Monorepo pnpm + Turborepo, NestJS backend con Clean Architecture skeleton (12 m\u00f3dulos), Next.js frontend con App Router, Prisma + PostgreSQL, Railway Nixpacks config, Jest + Vitest, Swagger/OpenAPI, shared packages (contracts, config). Build 4/4 packages exitoso, tests 6/6 pasan.",
+  "artifacts": {
+    "spec": "C:\\Users\\fallegri\\OneDrive\\SDD\\OpenCode\\crmFast\\.opencode\\mcp-design\\crmFast\\specs\\v1.0\\spec.json",
+    "requirements": "C:\\Users\\fallegri\\OneDrive\\SDD\\OpenCode\\crmFast\\.opencode\\mcp-design\\crmFast\\specs\\v1.0\\requirements.json",
+    "phase_contract": "C:\\Users\\fallegri\\OneDrive\\SDD\\OpenCode\\crmFast\\.opencode\\mcp-design\\crmFast\\specs\\v1.0\\phase_contract.json",
+    "plan": "C:\\Users\\fallegri\\OneDrive\\SDD\\OpenCode\\crmFast\\.opencode\\mcp-design\\crmFast\\specs\\v1.0\\plan.json",
+    "tasks": "C:\\Users\\fallegri\\OneDrive\\SDD\\OpenCode\\crmFast\\.opencode\\mcp-design\\crmFast\\specs\\v1.0\\tasks.json"
+  }
+}

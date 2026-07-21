@@ -1,0 +1,476 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  ADMIN
+  DIRECTOR
+  SUPERVISOR
+  ADVISOR
+}
+
+model User {
+  id              String              @id @default(uuid())
+  email           String              @unique
+  password        String
+  name            String
+  roleId          String
+  role            Role                @relation(fields: [roleId], references: [id])
+  isActive        Boolean             @default(true)
+  twoFactorSecret String?
+  twoFactorEnabled Boolean            @default(false)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  sessions        Session[]
+  passwordResets  PasswordResetToken[]
+  opportunities   Opportunity[]
+  advisorPrograms AdvisorProgram[]
+  advisorGoals    AdvisorGoal[]
+  uploadedDocuments OpportunityDocument[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshToken String   @unique
+  userAgent    String?
+  ipAddress    String?
+  isRevoked    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  lastActivity DateTime @default(now())
+  expiresAt    DateTime
+
+  @@map("sessions")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
+}
+
+model Role {
+  id          String          @id @default(uuid())
+  name        RoleName        @unique
+  description String?
+  permissions Permission[]
+  users       User[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id     String @id @default(uuid())
+  module String
+  action String
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  @@unique([roleId, module, action])
+  @@map("permissions")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  entity    String
+  entityId  String
+  action    String
+  diff      Json?
+  actorId   String
+  timestamp DateTime @default(now())
+  metadata  Json?
+
+  @@map("audit_logs")
+}
+
+enum Modality {
+  PRESENCIAL
+  VIRTUAL
+  HIBRIDO
+}
+
+model Faculty {
+  id        String    @id @default(uuid())
+  name      String
+  code      String    @unique
+  description String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  programs  Program[]
+
+  @@map("faculties")
+}
+
+model Program {
+  id           String     @id @default(uuid())
+  name         String
+  code         String     @unique
+  description  String?
+  facultyId    String
+  faculty      Faculty    @relation(fields: [facultyId], references: [id])
+  modality     Modality
+  durationMonths Int?
+  price        Decimal    @default(0)
+  currency     String     @default("BOB")
+  hasScholarship Boolean  @default(false)
+  scholarshipInfo String?
+  quota        Int?
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  cohorts      Cohort[]
+  opportunities Opportunity[]
+  advisorPrograms AdvisorProgram[]
+
+  @@map("programs")
+}
+
+model Cohort {
+  id             String   @id @default(uuid())
+  name           String
+  programId      String
+  program        Program  @relation(fields: [programId], references: [id])
+  startDate      DateTime
+  endDate        DateTime?
+  enrollmentStartDate DateTime?
+  enrollmentEndDate   DateTime?
+  quota          Int?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  opportunities  Opportunity[]
+
+  @@map("cohorts")
+}
+
+enum Channel {
+  MANUAL
+  WEB
+  WHATSAPP
+  EMAIL
+  PHONE
+  REFERRAL
+  CAMPAIGN
+  OTHER
+}
+
+model Contact {
+  id             String    @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String?
+  phone          String?
+  identityDocument String?
+  identityType   String?
+  city           String?
+  notes          String?
+  channel        Channel   @default(MANUAL)
+  isDuplicate    Boolean   @default(false)
+  duplicateOfId  String?
+  duplicateOf    Contact?  @relation("ContactDuplicates", fields: [duplicateOfId], references: [id])
+  duplicates     Contact[] @relation("ContactDuplicates")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  opportunities  Opportunity[]
+
+  @@unique([identityDocument, identityType])
+  @@map("contacts")
+}
+
+model PipelineStage {
+  id          String   @id @default(uuid())
+  name        String
+  order       Int
+  type        StageType @default(NORMAL)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  opportunities Opportunity[]
+
+  @@map("pipeline_stages")
+}
+
+enum StageType {
+  NORMAL
+  TERMINAL_ENROLLED
+  TERMINAL_NOT_INTERESTED
+  TERMINAL_LOST
+}
+
+model Opportunity {
+  id            String        @id @default(uuid())
+  contactId     String
+  contact       Contact       @relation(fields: [contactId], references: [id])
+  programId     String
+  program       Program       @relation(fields: [programId], references: [id])
+  cohortId      String?
+  cohort        Cohort?       @relation(fields: [cohortId], references: [id])
+  stageId       String
+  stage         PipelineStage @relation(fields: [stageId], references: [id])
+  advisorId     String?
+  advisor       User?         @relation(fields: [advisorId], references: [id])
+  channel       Channel       @default(MANUAL)
+  campaignId    String?
+  campaign      Campaign?     @relation(fields: [campaignId], references: [id])
+  isEnrolled    Boolean       @default(false)
+  enrolledAt    DateTime?
+  enrollmentNote String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  stageHistory  StageHistory[]
+  activities    ActivityEvent[]
+  calendarEvents CalendarEvent[]
+  documents     OpportunityDocument[]
+
+  @@map("opportunities")
+}
+
+model AdvisorProgram {
+  id         String   @id @default(uuid())
+  advisorId  String
+  advisor    User     @relation(fields: [advisorId], references: [id])
+  programId  String
+  program    Program  @relation(fields: [programId], references: [id])
+  isActive   Boolean  @default(true)
+  cursor     Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@unique([advisorId, programId])
+  @@map("advisor_programs")
+}
+
+model StageHistory {
+  id            String   @id @default(uuid())
+  opportunityId String
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id])
+  fromStageId   String?
+  toStageId     String
+  actorId       String
+  createdAt     DateTime @default(now())
+
+  @@map("stage_histories")
+}
+
+enum ActivityType {
+  CALL
+  EMAIL
+  WHATSAPP
+  MEETING
+  NOTE
+  FILE
+  STAGE_CHANGE
+  SYSTEM
+}
+
+model ActivityEvent {
+  id            String       @id @default(uuid())
+  opportunityId String
+  opportunity   Opportunity  @relation(fields: [opportunityId], references: [id])
+  type          ActivityType
+  description   String
+  note          String?
+  fileUrl       String?
+  fileName      String?
+  actorId       String
+  createdAt     DateTime     @default(now())
+
+  @@map("activity_events")
+}
+
+enum EventType {
+  APPOINTMENT
+  TASK
+  REMINDER
+}
+
+model CalendarEvent {
+  id            String    @id @default(uuid())
+  title         String
+  description   String?
+  type          EventType @default(APPOINTMENT)
+  startDate     DateTime
+  endDate       DateTime?
+  allDay        Boolean   @default(false)
+  userId        String
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
+  isCompleted   Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("calendar_events")
+}
+
+model Reminder {
+  id              String   @id @default(uuid())
+  title           String
+  description     String?
+  reminderDate    DateTime
+  userId          String
+  opportunityId   String?
+  calendarEventId String?
+  isSent          Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@map("reminders")
+}
+
+model Notification {
+  id          String                @id @default(uuid())
+  userId      String
+  title       String
+  message     String
+  type        String                @default("INFO")
+  referenceId String?
+  readAt      DateTime?
+  createdAt   DateTime              @default(now())
+  deliveries  NotificationDelivery[]
+
+  @@map("notifications")
+}
+
+enum RuleTrigger {
+  STAGE_CHANGE
+  INACTIVITY
+  LEAD_CAPTURE
+  TIME_BASED
+}
+
+enum RuleAction {
+  SEND_NOTIFICATION
+  CREATE_REMINDER
+  CREATE_TASK
+  ASSIGN_LEAD
+  SEND_EMAIL
+}
+
+model AutomationRule {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  trigger     RuleTrigger
+  action      RuleAction
+  config      Json
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("automation_rules")
+}
+
+model Campaign {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  channel     Channel  @default(CAMPAIGN)
+  source      String?
+  cost        Float    @default(0)
+  startDate   DateTime
+  endDate     DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  opportunities Opportunity[]
+
+  @@map("campaigns")
+}
+
+model AdvisorGoal {
+  id            String   @id @default(uuid())
+  advisorId     String
+  advisor       User     @relation(fields: [advisorId], references: [id])
+  targetEnrolled Int
+  periodStart   DateTime
+  periodEnd     DateTime
+  createdAt     DateTime @default(now())
+
+  @@unique([advisorId, periodStart, periodEnd])
+  @@map("advisor_goals")
+}
+
+enum DocumentType {
+  IDENTITY_DOCUMENT
+  ACADEMIC_CERTIFICATE
+  DIPLOMA
+  PAYMENT_RECEIPT
+  CONTRACT
+  MEDICAL_CERTIFICATE
+  RECOMMENDATION_LETTER
+  OTHER
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model OpportunityDocument {
+  id          String         @id @default(uuid())
+  opportunityId String
+  opportunity Opportunity   @relation(fields: [opportunityId], references: [id])
+  type        DocumentType
+  status      DocumentStatus @default(PENDING)
+  fileName    String
+  fileUrl     String
+  fileSize    Int?
+  mimeType    String?
+  notes       String?
+  uploadedById String
+  uploadedBy  User           @relation(fields: [uploadedById], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("opportunity_documents")
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WHATSAPP
+  SMS
+  PUSH
+}
+
+model NotificationTemplate {
+  id        String             @id @default(uuid())
+  code      String             @unique
+  name      String
+  subject   String?
+  body      String
+  channels  NotificationChannel[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@map("notification_templates")
+}
+
+model NotificationDelivery {
+  id          String             @id @default(uuid())
+  notificationId String
+  notification Notification    @relation(fields: [notificationId], references: [id])
+  channel     NotificationChannel
+  status      String             @default("PENDING")
+  sentAt      DateTime?
+  error       String?
+  createdAt   DateTime           @default(now())
+
+  @@map("notification_deliveries")
+}

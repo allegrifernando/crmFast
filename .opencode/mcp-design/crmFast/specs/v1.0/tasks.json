@@ -1,0 +1,72 @@
+{
+  "component": "crmFast",
+  "iteration": "v1.0-iter-1",
+  "created": "2026-07-21T12:08:17.141884",
+  "tasks": [
+    {
+      "id": "S1.T1",
+      "name": "Inicializar monorepo pnpm + Turborepo",
+      "precondition": "Directorio crmFast vac\u00edo",
+      "postcondition": "Estructura monorepo con pnpm-workspace.yaml, turbo.json, package.json ra\u00edz",
+      "invariant": "pnpm install debe completar sin errores",
+      "gherkin": "Feature: Monorepo scaffolding\nScenario: Initialize monorepo\nGiven an empty project directory\nWhen I run pnpm install\nThen all workspace packages resolve without error"
+    },
+    {
+      "id": "S1.T2",
+      "name": "Scaffolding apps/api (NestJS)",
+      "precondition": "Monorepo inicializado",
+      "postcondition": "NestJS app funcionando con estructura de m\u00f3dulos: identity, catalog, contacts, opportunities, activities, agenda, automations, campaigns, reporting, documents, notifications, audit. Cada uno con domain/application/infrastructure/interface",
+      "invariant": "nest start debe arrancar sin error. Swagger UI en /api/docs",
+      "gherkin": "Feature: NestJS scaffolding\nScenario: API starts\nGiven the NestJS app is initialized\nWhen I run nest start\nThen the server starts on port 3000\nAnd Swagger UI is available at /api/docs"
+    },
+    {
+      "id": "S1.T3",
+      "name": "Scaffolding apps/web (Next.js)",
+      "precondition": "Monorepo inicializado",
+      "postcondition": "Next.js 14+ con App Router funcionando",
+      "invariant": "next dev arranca sin error",
+      "gherkin": "Feature: Next.js scaffolding\nScenario: Web starts\nGiven the Next.js app is initialized\nWhen I run next dev\nThen the dev server starts without error"
+    },
+    {
+      "id": "S1.T4",
+      "name": "Configurar Prisma + PostgreSQL",
+      "precondition": "NestJS scaffolding completado",
+      "postcondition": "Prisma schema con modelos base (User, Role, Permission, AuditLog). Migrations aplicadas a PostgreSQL",
+      "invariant": "prisma generate y prisma migrate dev completan sin error",
+      "gherkin": "Feature: Database setup\nScenario: Prisma connects to PostgreSQL\nGiven Prisma is configured\nWhen I run prisma migrate dev\nThen the database schema is created\nAnd User, Role, Permission, AuditLog tables exist"
+    },
+    {
+      "id": "S1.T5",
+      "name": "Configurar Railway Nixpacks",
+      "precondition": "API y Web scaffoldings completados",
+      "postcondition": "railway.json configurado. Nixpacks detecta servicios. Variables de entorno documentadas",
+      "invariant": "Nixpacks build completa sin Dockerfile",
+      "gherkin": "Feature: Railway deployment\nScenario: Nixpacks build\nGiven Railway Nixpacks is configured\nWhen I run nixpacks build\nThen the build succeeds without a Dockerfile"
+    },
+    {
+      "id": "S1.T6",
+      "name": "Configurar tests (Jest + Vitest)",
+      "precondition": "API y Web scaffoldings completados",
+      "postcondition": "Jest configurado en apps/api, Vitest en apps/web. Scripts pnpm test funcionan",
+      "invariant": "pnpm test ejecuta tests sin error",
+      "gherkin": "Feature: Test configuration\nScenario: Run tests\nGiven Jest and Vitest are configured\nWhen I run pnpm test\nThen all test suites pass"
+    },
+    {
+      "id": "S1.T7",
+      "name": "Configurar CI b\u00e1sico",
+      "precondition": "Tests configurados",
+      "postcondition": "Pipeline CI con lint, typecheck, tests funcionando",
+      "invariant": "CI pipeline se ejecuta sin error",
+      "gherkin": "Feature: CI pipeline\nScenario: CI runs\nGiven CI pipeline is configured\nWhen code is pushed\nThen lint, typecheck, and tests run automatically"
+    },
+    {
+      "id": "S1.T8",
+      "name": "Configurar packages compartidos",
+      "precondition": "Monorepo inicializado",
+      "postcondition": "packages/contracts con tipos base. packages/config con configuraciones",
+      "invariant": "pnpm build en packages completa sin error",
+      "gherkin": "Feature: Shared packages\nScenario: Build shared packages\nGiven packages/contracts and packages/config exist\nWhen I run pnpm build\nThen both packages build successfully"
+    }
+  ],
+  "status": "draft"
+}

@@ -1,0 +1,98 @@
+{
+  "component": "crmFast",
+  "created": "2026-07-21T12:08:01.289451",
+  "deliverables": [
+    {
+      "id": "D1",
+      "description": "Monorepo con pnpm workspaces + Turborepo"
+    },
+    {
+      "id": "D2",
+      "description": "apps/api (NestJS) con Clean Architecture skeleton"
+    },
+    {
+      "id": "D3",
+      "description": "apps/web (Next.js 14+) con App Router"
+    },
+    {
+      "id": "D4",
+      "description": "packages/contracts (tipos compartidos)"
+    },
+    {
+      "id": "D5",
+      "description": "packages/config (configuraciones)"
+    },
+    {
+      "id": "D6",
+      "description": "Prisma schema con base de datos PostgreSQL"
+    },
+    {
+      "id": "D7",
+      "description": "Swagger/OpenAPI configurado en API"
+    },
+    {
+      "id": "D8",
+      "description": "Railway Nixpacks config (sin Docker)"
+    },
+    {
+      "id": "D9",
+      "description": "Pipeline CI b\u00e1sico"
+    },
+    {
+      "id": "D10",
+      "description": "Jest configurado para backend, Vitest para frontend"
+    },
+    {
+      "id": "D11",
+      "description": "Estructura de m\u00f3dulos vac\u00eda (domain/application/infrastructure/interface) para todos los bounded contexts"
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "description": "pnpm install && pnpm build completan sin error"
+    },
+    {
+      "id": "AC2",
+      "description": "NestJS arranca con nest start en modo dev"
+    },
+    {
+      "id": "AC3",
+      "description": "Next.js dev server arranca sin error"
+    },
+    {
+      "id": "AC4",
+      "description": "Prisma generate funciona contra Postgres"
+    },
+    {
+      "id": "AC5",
+      "description": "Tests pasan: pnpm test (backend y frontend)"
+    },
+    {
+      "id": "AC6",
+      "description": "Railway Nixpacks detecta correctamente los servicios"
+    },
+    {
+      "id": "AC7",
+      "description": "Swagger UI accesible en /api/docs"
+    }
+  ],
+  "out_of_scope": [
+    "Autenticaci\u00f3n",
+    "RBAC",
+    "Cat\u00e1logo acad\u00e9mico",
+    "Contactos y oportunidades",
+    "Actividades",
+    "Agenda",
+    "Automaciones",
+    "Campa\u00f1as",
+    "Reportes",
+    "Documentos",
+    "Notificaciones",
+    "Auditor\u00eda funcional"
+  ],
+  "stakeholder_approvers": [],
+  "estimated_effort": "",
+  "risks": [],
+  "status": "draft"
+}

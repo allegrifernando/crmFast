@@ -1,0 +1,13 @@
+[phases]
+  install = {
+    cmds = ["pnpm install"]
+  }
+  setup = {
+    cmds = ["cd apps/api && npx prisma generate"]
+  }
+  build = {
+    cmds = ["pnpm build"]
+  }
+
+[deploy]
+  startCmd = "cd apps/api && npx prisma migrate deploy && node dist/src/main"

@@ -1,0 +1,103 @@
+{
+  "component": "crmFast",
+  "iteration": "v1.0-iter-1",
+  "created": "2026-07-21T12:08:07.885253",
+  "activities": [
+    {
+      "id": "A1",
+      "name": "Inicializar monorepo",
+      "description": "Crear estructura pnpm workspaces + Turborepo con apps/api, apps/web, packages/contracts, packages/config",
+      "priority": "alta",
+      "dependencies": []
+    },
+    {
+      "id": "A2",
+      "name": "Configurar apps/api (NestJS)",
+      "description": "Scaffolding NestJS con Clean Architecture skeleton. Crear estructura de directorios vac\u00eda para todos los bounded contexts con domain/application/infrastructure/interface",
+      "priority": "alta",
+      "dependencies": [
+        "A1"
+      ]
+    },
+    {
+      "id": "A3",
+      "name": "Configurar apps/web (Next.js)",
+      "description": "Scaffolding Next.js 14+ con App Router",
+      "priority": "alta",
+      "dependencies": [
+        "A1"
+      ]
+    },
+    {
+      "id": "A4",
+      "name": "Configurar Prisma + PostgreSQL",
+      "description": "Instalar Prisma, crear schema inicial con tablas base (User, Role, Permission), configurar conexi\u00f3n a PostgreSQL",
+      "priority": "alta",
+      "dependencies": [
+        "A2"
+      ]
+    },
+    {
+      "id": "A5",
+      "name": "Configurar Railway deployment",
+      "description": "Configurar Nixpacks, railway.json, variables de entorno para PostgreSQL y Redis en Railway",
+      "priority": "alta",
+      "dependencies": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "A6",
+      "name": "Configurar Swagger/OpenAPI",
+      "description": "Configurar SwaggerModule en NestJS para documentaci\u00f3n autom\u00e1tica de API",
+      "priority": "media",
+      "dependencies": [
+        "A2"
+      ]
+    },
+    {
+      "id": "A7",
+      "name": "Configurar tests",
+      "description": "Jest para backend, Vitest para frontend. Configurar scripts pnpm test",
+      "priority": "alta",
+      "dependencies": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "A8",
+      "name": "Configurar CI b\u00e1sico",
+      "description": "Pipeline CI con lint, typecheck y tests",
+      "priority": "media",
+      "dependencies": [
+        "A7"
+      ]
+    },
+    {
+      "id": "A9",
+      "name": "Configurar packages compartidos",
+      "description": "packages/contracts con tipos base, packages/config con configuraciones compartidas",
+      "priority": "media",
+      "dependencies": [
+        "A1"
+      ]
+    },
+    {
+      "id": "A10",
+      "name": "Validar integraci\u00f3n",
+      "description": "Verificar que pnpm install, pnpm build, pnpm test funcionan. Probar Railway Nixpacks build local",
+      "priority": "alta",
+      "dependencies": [
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9"
+      ]
+    }
+  ],
+  "status": "draft"
+}

@@ -1,0 +1,293 @@
+{
+  "component": "crmFast",
+  "created": "2026-07-21T12:07:54.772890",
+  "pain_points": [
+    {
+      "id": "PP1",
+      "description": "Seguimiento manual de leads sin pipeline estructurado genera p\u00e9rdida de oportunidades"
+    },
+    {
+      "id": "PP2",
+      "description": "Duplicaci\u00f3n de contactos por falta de dedup al registrar leads"
+    },
+    {
+      "id": "PP3",
+      "description": "No hay visibilidad de la actividad comercial por advisor"
+    },
+    {
+      "id": "PP4",
+      "description": "Asignaci\u00f3n manual de leads sin criterio equitativo entre asesores"
+    },
+    {
+      "id": "PP5",
+      "description": "No hay trazabilidad de cambios ni auditor\u00eda de acciones"
+    },
+    {
+      "id": "PP6",
+      "description": "Reportes y dashboards inexistentes para la toma de decisiones"
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR1",
+      "module": "identity",
+      "description": "Autenticaci\u00f3n JWT con refresh tokens rotativos"
+    },
+    {
+      "id": "FR2",
+      "module": "identity",
+      "description": "RBAC con 4 roles: Admin, Director, Supervisor, Advisor"
+    },
+    {
+      "id": "FR3",
+      "module": "identity",
+      "description": "Permisos granular por (m\u00f3dulo, acci\u00f3n)"
+    },
+    {
+      "id": "FR4",
+      "module": "identity",
+      "description": "Advisors ven solo sus propias oportunidades"
+    },
+    {
+      "id": "FR5",
+      "module": "catalog",
+      "description": "Gesti\u00f3n de Facultades, Programas, Cohortes/Convocatorias"
+    },
+    {
+      "id": "FR6",
+      "module": "catalog",
+      "description": "Campos: modalidad, precio, becas, cupos informativos"
+    },
+    {
+      "id": "FR7",
+      "module": "contacts",
+      "description": "Registro de contactos con dedup por documento o email"
+    },
+    {
+      "id": "FR8",
+      "module": "contacts",
+      "description": "Flag de posible duplicado por tel\u00e9fono o nombre fuzzy"
+    },
+    {
+      "id": "FR9",
+      "module": "opportunities",
+      "description": "Oportunidad = Contact + Programa + Cohort opcional"
+    },
+    {
+      "id": "FR10",
+      "module": "opportunities",
+      "description": "Pipeline configurable por admin con ~12 stages"
+    },
+    {
+      "id": "FR11",
+      "module": "opportunities",
+      "description": "Stages terminales fijos: Enrolled, Not Interested, Lost"
+    },
+    {
+      "id": "FR12",
+      "module": "opportunities",
+      "description": "Asignaci\u00f3n round-robin con row-lock por programa"
+    },
+    {
+      "id": "FR13",
+      "module": "opportunities",
+      "description": "Reasignaci\u00f3n manual auditada por supervisor+"
+    },
+    {
+      "id": "FR14",
+      "module": "opportunities",
+      "description": "Captura multicanal de leads"
+    },
+    {
+      "id": "FR15",
+      "module": "activities",
+      "description": "Timeline append-only en cada oportunidad (llamadas, emails, WhatsApp, reuniones, notas, archivos, cambios de stage)"
+    },
+    {
+      "id": "FR16",
+      "module": "activities",
+      "description": "Sin edici\u00f3n ni borrado en el timeline"
+    },
+    {
+      "id": "FR17",
+      "module": "agenda",
+      "description": "Vistas d\u00eda/semana/mes filtradas por usuario"
+    },
+    {
+      "id": "FR18",
+      "module": "agenda",
+      "description": "Recordatorios vinculados a oportunidades o standalone"
+    },
+    {
+      "id": "FR19",
+      "module": "automations",
+      "description": "Reglas configurables: follow-up reminders, alertas de inactividad, auto creaci\u00f3n de tareas"
+    },
+    {
+      "id": "FR20",
+      "module": "automations",
+      "description": "Distribuci\u00f3n autom\u00e1tica de leads (reusa R4)"
+    },
+    {
+      "id": "FR21",
+      "module": "campaigns",
+      "description": "Campa\u00f1as con costo, atribuci\u00f3n de lead/enrollment por canal/source"
+    },
+    {
+      "id": "FR22",
+      "module": "campaigns",
+      "description": "M\u00e9tricas: cost-per-lead, cost-per-enrollment"
+    },
+    {
+      "id": "FR23",
+      "module": "reporting",
+      "description": "Dashboard ejecutivo: funnel, conversi\u00f3n por programa/campa\u00f1a/ciudad, ranking advisors, cumplimiento metas"
+    },
+    {
+      "id": "FR24",
+      "module": "reporting",
+      "description": "Dashboard personal por advisor"
+    },
+    {
+      "id": "FR25",
+      "module": "reporting",
+      "description": "Exportaci\u00f3n PDF/Excel/CSV"
+    },
+    {
+      "id": "FR26",
+      "module": "documents",
+      "description": "Documentos por oportunidad con clasificaci\u00f3n por tipo"
+    },
+    {
+      "id": "FR27",
+      "module": "documents",
+      "description": "Indicador de documentos faltantes"
+    },
+    {
+      "id": "FR28",
+      "module": "notifications",
+      "description": "Centro de notificaciones multicanal (in-app + email en v1, preparado para WhatsApp/SMS/push)"
+    },
+    {
+      "id": "FR29",
+      "module": "audit",
+      "description": "Toda mutaci\u00f3n debe ser atribuible a actor + timestamp"
+    },
+    {
+      "id": "FR30",
+      "module": "audit",
+      "description": "No hard-delete de registros hist\u00f3ricos nunca"
+    }
+  ],
+  "non_functional_requirements": [
+    {
+      "id": "NFR1",
+      "description": "Disponibilidad 99.5% en Railway"
+    },
+    {
+      "id": "NFR2",
+      "description": "Tiempo de respuesta API < 500ms para 95% de requests"
+    },
+    {
+      "id": "NFR3",
+      "description": "Seguridad: JWT con rotaci\u00f3n, guards server-side, OwnershipScope row-level"
+    },
+    {
+      "id": "NFR4",
+      "description": "Inmutabilidad: ActivityEvent y AuditLog son insert-only"
+    },
+    {
+      "id": "NFR5",
+      "description": "TDD obligatorio: RED antes de GREEN en cada dominio y servicio de aplicaci\u00f3n"
+    },
+    {
+      "id": "NFR6",
+      "description": "Cobertura de tests > 80%"
+    },
+    {
+      "id": "NFR7",
+      "description": "Preparado para integraci\u00f3n futura: ports/adapters para WhatsApp, SMS, email, push, S3, pagos, LMS"
+    },
+    {
+      "id": "NFR8",
+      "description": "Reportes via materialized views refrescadas cada 5 minutos"
+    },
+    {
+      "id": "NFR9",
+      "description": "Automation engine via BullMQ (Redis), no inline en cron handlers"
+    }
+  ],
+  "use_cases": [
+    {
+      "id": "UC1",
+      "name": "Registro de lead",
+      "actors": [
+        "Advisor",
+        "API p\u00fablica"
+      ],
+      "precondition": "Contacto no existe o pasa dedup",
+      "flow": "Captura lead -> dedup -> crea Contact + Opportunity -> asigna advisor via round-robin"
+    },
+    {
+      "id": "UC2",
+      "name": "Avance en pipeline",
+      "actors": [
+        "Advisor"
+      ],
+      "flow": "Cambiar stage de Opportunity -> registra cambio en timeline + audit log"
+    },
+    {
+      "id": "UC3",
+      "name": "Matriculaci\u00f3n (Enrollment)",
+      "actors": [
+        "Advisor"
+      ],
+      "flow": "Acci\u00f3n manual -> registra enrollment -> Opportunity pasa a stage Enrolled -> audit trail con evidencia opcional"
+    },
+    {
+      "id": "UC4",
+      "name": "Asignaci\u00f3n manual",
+      "actors": [
+        "Supervisor",
+        "Director",
+        "Admin"
+      ],
+      "flow": "Reasignar Opportunity a otro advisor -> audit log obligatorio"
+    },
+    {
+      "id": "UC5",
+      "name": "Configuraci\u00f3n de pipeline",
+      "actors": [
+        "Admin"
+      ],
+      "flow": "Renombrar/reordenar/desactivar stages no terminales"
+    },
+    {
+      "id": "UC6",
+      "name": "Registro de actividad",
+      "actors": [
+        "Advisor"
+      ],
+      "flow": "A\u00f1adir nota/llamada/email/reuni\u00f3n al timeline -> append-only"
+    },
+    {
+      "id": "UC7",
+      "name": "Ver dashboard ejecutivo",
+      "actors": [
+        "Director",
+        "Admin"
+      ],
+      "flow": "Ver funnel, conversiones, ranking, cumplimiento -> exportar"
+    },
+    {
+      "id": "UC8",
+      "name": "Ver dashboard personal",
+      "actors": [
+        "Advisor",
+        "Supervisor"
+      ],
+      "flow": "Ver pipeline personal y m\u00e9tricas"
+    }
+  ],
+  "status": "draft"
+}

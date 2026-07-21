@@ -1,0 +1,11 @@
+{
+  "component": "crmFast",
+  "version": "v1.0",
+  "created": "2026-07-21T12:07:40.896858",
+  "purpose": "",
+  "interfaces": [],
+  "dependencies": [],
+  "constraints": [],
+  "owasp_relevant": [],
+  "status": "draft"
+}
